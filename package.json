@@ -1,0 +1,27 @@
+{
+  "name": "crontab.backend",
+  "version": "1.0.0",
+  "description": "Backend for crontab.training.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yryuvraj/crontab.backend.git"
+  },
+  "keywords": [],
+  "author": "Yuvraj Rathi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yryuvraj/crontab.backend/issues"
+  },
+  "homepage": "https://github.com/yryuvraj/crontab.backend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.11",
+    "typescript": "^4.9.5"
+  }
+}
