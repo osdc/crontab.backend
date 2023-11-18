@@ -11,7 +11,8 @@ app.get('/v1/generate', (req, res) => {
   let readableExpression: string;
   try {
     readableExpression = generateReadableExpression(cronExpression);
-  } catch (error: any) {
+  } 
+  catch (error: any) {
     console.error(`Error generating readable expression: ${error.message}`);
     readableExpression = 'Invalid expression';
   }
@@ -37,32 +38,98 @@ describe('GET /v1/generate', () => {
     expect(response.body).toHaveProperty('readableExpression', knownReadableExpression);
   });
 
-  it('should return a predefined readableExpression for another known cronExpression', async () => {
-    const knownCronExpression = '0 12 * * 1-5';
-    const knownReadableExpression = 'Every minute, at 12:00 PM, on every day between Monday and Friday';
+  it('should return a predefined readableExpression for a random cronExpression', async () => {
+    const randomMinute = Math.floor(Math.random() * 60);
+    const randomHour = Math.floor(Math.random() * 24);
+    const randomDayOfWeek = Math.floor(Math.random() * 7);
 
-    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(knownCronExpression);
-    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(knownReadableExpression);
+    const randomCronExpression = `${randomMinute} ${randomHour} * * ${randomDayOfWeek}`;
+    const expectedReadableExpression = `Every ${randomMinute} minutes, at ${randomHour}:00, on every day`;
 
-    const response = await request(app).get('/v1/generate');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('expression', knownCronExpression);
-    expect(response.body).toHaveProperty('readableExpression', knownReadableExpression);
-  });
-
-  it('should return a predefined readableExpression for another known cronExpression', async () => {
-    const knownCronExpression = '*/15 3-6 * * MON-FRI';
-    const knownReadableExpression = 'Every 15 minutes, between 3:00 AM and 6:59 AM, on every day between Monday and Friday';
-
-    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(knownCronExpression);
-    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(knownReadableExpression);
+    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(randomCronExpression);
+    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(expectedReadableExpression);
 
     const response = await request(app).get('/v1/generate');
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('expression', knownCronExpression);
-    expect(response.body).toHaveProperty('readableExpression', knownReadableExpression);
+    expect(response.body).toHaveProperty('expression', randomCronExpression);
+    expect(response.body).toHaveProperty('readableExpression', expectedReadableExpression);
   });
 
+  it('should return a predefined readableExpression for another random cronExpression', async () => {
+    const randomMinute = Math.floor(Math.random() * 60);
+    const randomHour = Math.floor(Math.random() * 24);
+    const randomDayOfMonth = Math.floor(Math.random() * 31) + 1; // Adding 1 to not get day 0
+    const randomMonth = Math.floor(Math.random() * 12) + 1; 
+    const randomDayOfWeek = Math.floor(Math.random() * 7);
+
+    const randomCronExpression = `${randomMinute} ${randomHour} ${randomDayOfMonth} ${randomMonth} ${randomDayOfWeek}`;
+    const expectedReadableExpression = `Every ${randomMinute} minutes, at ${randomHour}:00, on day ${randomDayOfMonth} of month ${randomMonth}, on every day`;
+
+    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(randomCronExpression);
+    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(expectedReadableExpression);
+
+    const response = await request(app).get('/v1/generate');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('expression', randomCronExpression);
+    expect(response.body).toHaveProperty('readableExpression', expectedReadableExpression);
+  });
+
+  it('should return a predefined readableExpression for yet another random cronExpression', async () => {
+    const randomMinute = Math.floor(Math.random() * 60);
+    const randomHour = Math.floor(Math.random() * 24);
+    const randomMonth = Math.floor(Math.random() * 12) + 1; 
+    const randomDayOfWeek = Math.floor(Math.random() * 7);
+
+    const randomCronExpression = `${randomMinute} ${randomHour} * ${randomMonth} ${randomDayOfWeek}`;
+    const expectedReadableExpression = `Every ${randomMinute} minutes, at ${randomHour}:00, on every day, in month ${randomMonth}, on every day`;
+
+    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(randomCronExpression);
+    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(expectedReadableExpression);
+
+    const response = await request(app).get('/v1/generate');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('expression', randomCronExpression);
+    expect(response.body).toHaveProperty('readableExpression', expectedReadableExpression);
+  });
+
+  it('should return a predefined readableExpression for a different random cronExpression', async () => {
+    const randomMinute = Math.floor(Math.random() * 60);
+    const randomHour = Math.floor(Math.random() * 24);
+    const randomDayOfMonth = Math.floor(Math.random() * 31) + 1; 
+    const randomMonth = Math.floor(Math.random() * 12) + 1; 
+
+    const randomCronExpression = `${randomMinute} ${randomHour} ${randomDayOfMonth} ${randomMonth} *`;
+    const expectedReadableExpression = `Every ${randomMinute} minutes, at ${randomHour}:00, on day ${randomDayOfMonth} of month ${randomMonth}, on every day`;
+
+    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(randomCronExpression);
+    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(expectedReadableExpression);
+
+    const response = await request(app).get('/v1/generate');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('expression', randomCronExpression);
+    expect(response.body).toHaveProperty('readableExpression', expectedReadableExpression);
+  });
+
+  it('should return a predefined readableExpression for another different random cronExpression', async () => {
+    const randomMinute = Math.floor(Math.random() * 60);
+    const randomHour = Math.floor(Math.random() * 24);
+    const randomMonth = Math.floor(Math.random() * 12) + 1; 
+    const randomDayOfWeek = Math.floor(Math.random() * 7);
+
+    const randomCronExpression = `${randomMinute} ${randomHour} * ${randomMonth} ${randomDayOfWeek}`;
+    const expectedReadableExpression = `Every ${randomMinute} minutes, at ${randomHour}:00, on every day, in month ${randomMonth}, on every day`;
+
+    jest.spyOn(require('../src/cronGenerator'), 'generateCronExpression').mockReturnValue(randomCronExpression);
+    jest.spyOn(require('../src/cronGenerator'), 'generateReadableExpression').mockReturnValue(expectedReadableExpression);
+
+    const response = await request(app).get('/v1/generate');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('expression', randomCronExpression);
+    expect(response.body).toHaveProperty('readableExpression', expectedReadableExpression);
+  });
 });

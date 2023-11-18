@@ -20,8 +20,7 @@ export function generateCronExpression() {
 export function generateReadableExpression(cronExpression: string): string {
     try {
         return cronstrue.toString(cronExpression);
-    } 
-    catch (error) {
+    } catch (error) {
         console.error(`Error parsing cron expression: ${cronExpression}`);
         return 'Invalid cron expression';
     }

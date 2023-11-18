@@ -1,11 +1,9 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
+import { generateCronExpression, generateReadableExpression } from '../cronGenerator';
 
-import { generateCronExpression, generateReadableExpression } from './cronGenerator';
+export const crontabRoutes = Router();
 
-const app = express();
-const port = 3000;
-
-app.get('/v1/generate', (req, res) => {
+crontabRoutes.get('/generate', (req: Request, res: Response) => {
   const cronExpression = generateCronExpression();
   let readableExpression: string;
 
@@ -21,8 +19,3 @@ app.get('/v1/generate', (req, res) => {
     readableExpression: readableExpression,
   });
 });
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
